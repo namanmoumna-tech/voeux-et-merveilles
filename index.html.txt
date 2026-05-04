@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vœux & Merveilles — Marketplace Événements & Mariage</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A96E;
+      --gold-light: #F2E8D6;
+      --gold-lighter: #FAF5EC;
+      --gold-dark: #9B7940;
+      --ivory: #FAF8F4;
+      --ivory-dark: #F2EDE4;
+      --text-dark: #1E160E;
+      --text-mid: #6B5B47;
+      --text-light: #A89880;
+      --rose: #F0DDD8;
+      --sage: #D4DDD0;
+      --border: rgba(201,169,110,0.18);
+      --border-strong: rgba(201,169,110,0.35);
+      --shadow-sm: 0 2px 12px rgba(42,33,24,0.06);
+      --shadow-md: 0 8px 32px rgba(42,33,24,0.10);
+      --shadow-lg: 0 20px 60px rgba(42,33,24,0.13);
+      --radius: 4px;
+      --radius-lg: 8px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--ivory);
+      color: var(--text-dark);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    #root { min-height: 100vh; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--ivory); }
+    ::-webkit-scrollbar-thumb { background: var(--gold-light); border-radius: 3px; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .fade-up { animation: fadeUp 0.5s ease both; }
+    .fade-in { animation: fadeIn 0.4s ease both; }
+
+    /* NAV */
+    .nav {
+      position: sticky; top: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem; height: 64px;
+      background: rgba(250,248,244,0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 400; letter-spacing: 0.04em;
+      color: var(--text-dark); text-decoration: none; cursor: pointer;
+      display: flex; align-items: center; gap: 0;
+    }
+    .nav-logo em { font-style: italic; color: var(--gold); }
+    .nav-links { display: flex; align-items: center; gap: 0.5rem; }
+    .nav-link {
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 12px;
+      color: var(--text-mid); letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 8px 14px; border-radius: var(--radius); transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--gold); }
+    .nav-link.active { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold); color: white; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 9px 20px; border-radius: var(--radius); transition: background 0.2s;
+      margin-left: 0.5rem;
+    }
+    .nav-cta:hover { background: var(--gold-dark); }
+
+    /* HERO */
+    .hero {
+      position: relative; overflow: hidden;
+      padding: 5rem 2.5rem 4.5rem; text-align: center;
+      background: linear-gradient(170deg, var(--ivory) 0%, var(--ivory-dark) 100%);
+    }
+    .hero-deco {
+      position: absolute; border-radius: 50%; pointer-events: none;
+    }
+    .hero-deco-1 {
+      width: 500px; height: 500px;
+      top: -150px; left: -100px;
+      background: radial-gradient(circle, rgba(201,169,110,0.07) 0%, transparent 65%);
+    }
+    .hero-deco-2 {
+      width: 400px; height: 400px;
+      bottom: -100px; right: -80px;
+      background: radial-gradient(circle, rgba(201,169,110,0.05) 0%, transparent 65%);
+    }
+    .hero-eyebrow {
+      font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 1.5rem;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    .hero-eyebrow::before, .hero-eyebrow::after {
+      content: ''; width: 32px; height: 1px; background: var(--gold); opacity: 0.5;
+    }
+    .hero-h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 58px; font-weight: 300; line-height: 1.12;
+      color: var(--text-dark); margin-bottom: 1.25rem;
+    }
+    .hero-h1 em { font-style: italic; color: var(--gold); }
+    .hero-p {
+      font-size: 16px; color: var(--text-mid); font-weight: 300;
+      max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.75;
+    }
+    .hero-search {
+      display: flex; max-width: 680px; margin: 0 auto;
+      border: 1px solid var(--border-strong); border-radius: 6px;
+      overflow: hidden; background: white;
+      box-shadow: var(--shadow-md);
+    }
+    .hero-search select {
+      border: none; outline: none; border-right: 1px solid var(--border);
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+      color: var(--text-mid); background: white; padding: 0 1rem;
+      min-width: 200px; cursor: pointer;
+    }
+    .hero-search input {
+      flex: 1; border: none; outline: none;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      color: var(--text-dark); padding: 0 1rem;
+    }
+    .hero-search input::placeholder { color: var(--text-light); }
+    .hero-search button {
+      background: var(--gold); color: white; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase; padding: 0 1.75rem;
+      height: 52px; transition: background 0.2s; white-space: nowrap;
+    }
+    .hero-search button:hover { background: var(--gold-dark); }
+    .hero-stats {
+      display: flex; justify-content: center; gap: 3rem;
+      margin-top: 3rem;
+    }
+    .hero-stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 400; color: var(--gold);
+    }
+    .hero-stat-lbl { font-size: 12px; color: var(--text-light); letter-spacing: 0.04em; }
+
+    /* SECTIONS GÉNÉRIQUES */
+    .section { padding: 4rem 2.5rem; }
+    .section-alt { background: white; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .section-header { text-align: center; margin-bottom: 2.5rem; }
+    .section-eyebrow {
+      font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px; font-weight: 400; color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+    .section-sub { font-size: 14px; color: var(--text-light); font-weight: 300; }
+
+    /* CATÉGORIES */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.85rem; max-width: 1100px; margin: 0 auto;
+    }
+    .cat-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem 0.75rem;
+      text-align: center; cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .cat-card:hover {
+      border-color: var(--gold); background: var(--gold-lighter);
+      transform: translateY(-3px); box-shadow: var(--shadow-sm);
+    }
+    .cat-icon { font-size: 26px; margin-bottom: 0.6rem; display: block; }
+    .cat-name { font-size: 11px; font-weight: 600; color: var(--text-dark); margin-bottom: 0.2rem; line-height: 1.3; letter-spacing: 0.02em; }
+    .cat-count { font-size: 10px; color: var(--text-light); }
+
+    /* HOW IT WORKS */
+    .how-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2.5rem; max-width: 800px; margin: 0 auto; text-align: center;
+    }
+    .how-num {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: var(--gold-light); color: var(--gold-dark);
+      font-family: 'Cormorant Garamond', serif; font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .how-title { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 400; margin-bottom: 0.5rem; }
+    .how-desc { font-size: 13px; color: var(--text-light); line-height: 1.65; font-weight: 300; }
+
+    /* TÉMOIGNAGES */
+    .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; max-width: 1100px; margin: 0 auto; }
+    .testi-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.5rem;
+    }
+    .testi-stars { color: var(--gold); font-size: 14px; margin-bottom: 0.75rem; }
+    .testi-text { font-size: 14px; color: var(--text-mid); line-height: 1.7; font-style: italic; margin-bottom: 1rem; font-weight: 300; }
+    .testi-author { font-size: 12px; font-weight: 600; color: var(--text-dark); }
+    .testi-event { font-size: 11px; color: var(--text-light); }
+
+    /* PROVIDERS PAGE */
+    .providers-header {
+      padding: 2rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: white;
+    }
+    .providers-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 400; margin-bottom: 1.25rem;
+    }
+    .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: white; border: 1px solid var(--border);
+      border-radius: 2px; padding: 6px 12px;
+      font-size: 11px; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; color: var(--text-mid);
+      text-transform: uppercase; letter-spacing: 0.04em;
+      transition: all 0.18s; white-space: nowrap;
+    }
+    .filter-btn:hover { border-color: var(--gold); color: var(--gold); }
+    .filter-btn.active { background: var(--gold); border-color: var(--gold); color: white; }
+
+    .providers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(268px, 1fr));
+      gap: 1.25rem; padding: 2rem 2.5rem;
+    }
+    .provider-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden; cursor: pointer;
+      transition: all 0.22s ease;
+    }
+    .provider-card:hover {
+      border-color: var(--gold);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .provider-img {
+      height: 155px; display: flex; align-items: center; justify-content: center;
+      font-size: 44px; position: relative;
+    }
+    .provider-badge {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--gold); color: white;
+      font-size: 10px; padding: 3px 9px; border-radius: 2px;
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+    }
+    .provider-body { padding: 1rem 1.25rem; }
+    .provider-cat { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 0.35rem; }
+    .provider-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 400; margin-bottom: 0.2rem; }
+    .provider-loc { font-size: 12px; color: var(--text-light); margin-bottom: 0.65rem; }
+    .provider-rating { display: flex; align-items: center; gap: 6px; margin-bottom: 0.65rem; }
+    .stars { color: var(--gold); font-size: 13px; }
+    .rating-num { font-size: 12px; color: var(--text-mid); }
+    .provider-price { font-size: 13px; color: var(--text-dark); font-weight: 600; }
+    .provider-footer {
+      border-top: 1px solid var(--border);
+      padding: 0.75rem 1.25rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .tag { font-size: 10px; background: var(--gold-light); color: var(--gold-dark); padding: 3px 8px; border-radius: 2px; font-weight: 500; }
+    .book-btn {
+      background: none; border: 1px solid var(--gold); color: var(--gold);
+      font-size: 11px; padding: 5px 12px; border-radius: var(--radius);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+      transition: all 0.18s;
+    }
+    .book-btn:hover { background: var(--gold); color: white; }
+
+    /* DETAIL PAGE */
+    .detail-back {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+      color: var(--text-mid); padding: 1.5rem 2.5rem 0;
+      transition: color 0.2s;
+    }
+    .detail-back:hover { color: var(--gold); }
+    .detail-hero {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2.5rem; padding: 1.5rem 2.5rem 2rem; align-items: start;
+    }
+    .detail-img {
+      height: 320px; border-radius: var(--radius-lg);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; position: relative;
+    }
+    .detail-badge {
+      position: absolute; top: 16px; left: 16px;
+      background: var(--gold); color: white;
+      font-size: 11px; padding: 4px 12px; border-radius: 2px;
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;
+    }
+    .detail-cat { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--gold); margin-bottom: 0.5rem; }
+    .detail-name { font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; margin-bottom: 0.35rem; line-height: 1.1; }
+    .detail-loc { font-size: 14px; color: var(--text-mid); margin-bottom: 0.75rem; }
+    .detail-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+    .detail-rating .stars { font-size: 16px; }
+    .detail-rating-num { font-size: 14px; color: var(--text-mid); }
+    .detail-desc { font-size: 15px; color: var(--text-mid); line-height: 1.75; font-weight: 300; margin-bottom: 1.25rem; }
+    .detail-price-box {
+      background: var(--gold-lighter); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem;
+    }
+    .detail-price-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-light); margin-bottom: 0.25rem; }
+    .detail-price-val { font-size: 20px; font-family: 'Cormorant Garamond', serif; color: var(--gold); font-weight: 500; }
+    .detail-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .detail-tag { font-size: 12px; background: white; border: 1px solid var(--border); color: var(--text-mid); padding: 5px 12px; border-radius: 2px; }
+    .detail-book-btn {
+      width: 100%; background: var(--gold); color: white; border: none;
+      border-radius: var(--radius); padding: 15px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .detail-book-btn:hover { background: var(--gold-dark); }
+    .detail-extra {
+      background: var(--gold-lighter); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); padding: 1.25rem; margin: 0 2.5rem 2rem;
+    }
+    .detail-extra-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.75rem; }
+    .detail-extra-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+    .detail-extra-row { font-size: 13px; }
+    .detail-extra-row span:first-child { color: var(--text-light); }
+    .detail-extra-row span:last-child { font-weight: 500; color: var(--text-dark); }
+    .detail-items { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .detail-item-tag { font-size: 11px; background: white; border: 1px solid var(--border); color: var(--text-mid); padding: 4px 9px; border-radius: 2px; }
+
+    /* BOOKING PAGE */
+    .booking-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 2.5rem; }
+    .booking-back {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: none; border: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-size: 13px;
+      color: var(--text-mid); margin-bottom: 1.5rem; padding: 0;
+      transition: color 0.2s;
+    }
+    .booking-back:hover { color: var(--gold); }
+    .booking-header {
+      display: flex; align-items: flex-start; gap: 1.5rem;
+      margin-bottom: 2rem; padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .booking-icon {
+      width: 72px; height: 72px; border-radius: var(--radius-lg);
+      background: var(--gold-light); display: flex; align-items: center;
+      justify-content: center; font-size: 32px; flex-shrink: 0;
+    }
+    .booking-meta-cat { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 0.3rem; }
+    .booking-meta-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; margin-bottom: 0.2rem; }
+    .booking-meta-loc { font-size: 13px; color: var(--text-mid); margin-bottom: 0.3rem; }
+    .booking-meta-price { font-size: 14px; color: var(--gold); font-weight: 600; }
+    .booking-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .booking-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.9rem; }
+
+    /* CALENDAR */
+    .calendar { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .cal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.85rem 1rem; border-bottom: 1px solid var(--border);
+    }
+    .cal-month { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; }
+    .cal-nav {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-light); font-size: 18px; padding: 2px 8px;
+      transition: color 0.2s; border-radius: 2px;
+    }
+    .cal-nav:hover { color: var(--gold); }
+    .cal-days { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0.5rem; gap: 2px; }
+    .cal-day-label { font-size: 10px; text-align: center; color: var(--text-light); padding: 0.4rem 0; text-transform: uppercase; letter-spacing: 0.05em; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+      font-size: 13px; cursor: pointer; border-radius: var(--radius); transition: all 0.15s;
+    }
+    .cal-day:hover:not(.disabled):not(.empty) { background: var(--gold-light); color: var(--gold-dark); }
+    .cal-day.selected { background: var(--gold); color: white; font-weight: 600; }
+    .cal-day.today { font-weight: 600; color: var(--gold); }
+    .cal-day.disabled { color: var(--border-strong); cursor: default; }
+    .cal-day.empty { cursor: default; }
+
+    /* SLOTS */
+    .slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-top: 1rem; }
+    .slot {
+      background: white; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 8px; text-align: center; cursor: pointer; font-size: 13px;
+      color: var(--text-dark); transition: all 0.15s;
+    }
+    .slot:hover:not(.taken) { border-color: var(--gold); color: var(--gold); background: var(--gold-lighter); }
+    .slot.selected { background: var(--gold); border-color: var(--gold); color: white; font-weight: 600; }
+    .slot.taken { background: var(--ivory); color: var(--text-light); cursor: default; text-decoration: line-through; font-size: 12px; }
+
+    /* FORM */
+    .form-card { background: white; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group:last-child { margin-bottom: 0; }
+    .form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); display: block; margin-bottom: 0.4rem; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 9px 12px; font-size: 14px; font-family: 'DM Sans', sans-serif;
+      color: var(--text-dark); background: white; outline: none; transition: border-color 0.18s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+    .form-textarea { resize: none; height: 75px; }
+
+    /* SUMMARY */
+    .summary-box {
+      background: var(--gold-lighter); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); padding: 1.1rem; margin-top: 1.25rem;
+    }
+    .summary-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.75rem; }
+    .summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+    .summary-row .lbl { color: var(--text-mid); }
+    .summary-divider { border: none; border-top: 1px solid var(--border-strong); margin: 0.5rem 0; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: var(--text-dark); }
+    .confirm-btn {
+      width: 100%; background: var(--gold); color: white; border: none;
+      border-radius: var(--radius); padding: 15px;
+      font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600;
+      letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer;
+      margin-top: 1.1rem; transition: background 0.2s;
+    }
+    .confirm-btn:hover { background: var(--gold-dark); }
+
+    /* INFO BOXES */
+    .info-box {
+      background: var(--gold-lighter); border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg); padding: 1.1rem; margin-bottom: 1.5rem;
+    }
+    .info-box-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.09em; color: var(--gold); margin-bottom: 0.65rem; }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+    .info-row { font-size: 12px; }
+    .info-row .ik { color: var(--text-light); }
+    .info-row .iv { font-weight: 600; color: var(--text-dark); }
+    .item-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .item-tag { font-size: 11px; background: white; border: 1px solid var(--border); color: var(--text-mid); padding: 3px 8px; border-radius: 2px; }
+
+    /* CONFIRM PAGE */
+    .confirm-page { max-width: 540px; margin: 0 auto; padding: 4rem 2rem; text-align: center; }
+    .confirm-circle {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: var(--gold-light); display: flex; align-items: center;
+      justify-content: center; font-size: 40px; margin: 0 auto 1.75rem;
+    }
+    .confirm-h2 { font-family: 'Cormorant Garamond', serif; font-size: 38px; font-weight: 300; margin-bottom: 0.75rem; }
+    .confirm-p { font-size: 15px; color: var(--text-mid); line-height: 1.7; margin-bottom: 2rem; font-weight: 300; }
+    .confirm-card {
+      background: white; border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 1.25rem; text-align: left; margin-bottom: 1.75rem;
+    }
+    .confirm-card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.9rem; }
+    .confirm-row {
+      display: flex; justify-content: space-between; font-size: 13px;
+      padding: 6px 0; border-bottom: 1px solid var(--border);
+    }
+    .confirm-row:last-child { border-bottom: none; }
+    .confirm-row .ck { color: var(--text-light); }
+    .confirm-row .cv { font-weight: 500; color: var(--text-dark); }
+    .confirm-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+    .btn-outline {
+      background: none; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 24px;
+      font-family: 'DM Sans', sans-serif; font-size: 12px;
+      text-transform: uppercase; letter-spacing: 0.07em; cursor: pointer;
+      color: var(--text-mid); transition: all 0.18s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* FOOTER */
+    footer {
+      background: var(--text-dark); color: rgba(255,255,255,0.6);
+      padding: 3rem 2.5rem;
+    }
+    .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; max-width: 1100px; margin: 0 auto; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; color: white; margin-bottom: 0.75rem; }
+    .footer-logo em { font-style: italic; color: var(--gold); }
+    .footer-desc { font-size: 13px; line-height: 1.7; font-weight: 300; }
+    .footer-col-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: white; margin-bottom: 1rem; }
+    .footer-link { display: block; font-size: 13px; margin-bottom: 0.5rem; cursor: pointer; transition: color 0.18s; }
+    .footer-link:hover { color: var(--gold); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 1.5rem; margin-top: 2rem; text-align: center;
+      font-size: 12px;
+    }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-light); }
+    .empty-state-icon { font-size: 48px; margin-bottom: 1rem; display: block; }
+    .empty-state-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 400; margin-bottom: 0.5rem; color: var(--text-mid); }
+
+    /* BREADCRUMB */
+    .breadcrumb {
+      padding: 1rem 2.5rem; font-size: 12px; color: var(--text-light);
+      border-bottom: 1px solid var(--border); background: white;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .breadcrumb span { cursor: pointer; transition: color 0.18s; }
+    .breadcrumb span:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--border-strong); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .nav { padding: 0 1.25rem; }
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      .hero-h1 { font-size: 36px; }
+      .hero-search { flex-direction: column; height: auto; border-radius: var(--radius-lg); }
+      .hero-search select, .hero-search input { border: none; border-bottom: 1px solid var(--border); height: 48px; width: 100%; }
+      .hero-search button { height: 48px; }
+      .hero-stats { gap: 1.5rem; }
+      .section { padding: 2.5rem 1.25rem; }
+      .cat-grid { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+      .booking-grid { grid-template-columns: 1fr; }
+      .detail-hero { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .providers-header { padding: 1.25rem; }
+      .providers-grid { padding: 1.25rem; }
+      .booking-wrap { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const { useState, useCallback } = React;
+
+// ===== DATA =====
+const CATEGORIES = [
+  { id:'robe', icon:'👗', name:'Robes de fête & mariage', count:'48 boutiques' },
+  { id:'gateau', icon:'🎂', name:'Gâteau mariage & anniversaire', count:'32 pâtissiers' },
+  { id:'dj', icon:'🎵', name:'DJ & Musique', count:'61 artistes' },
+  { id:'photo', icon:'📷', name:'Photographe', count:'89 pros' },
+  { id:'fleur', icon:'💐', name:'Fleuriste', count:'27 ateliers' },
+  { id:'traiteur', icon:'🍽️', name:'Traiteur', count:'44 chefs' },
+  { id:'coiffure', icon:'💇', name:'Coiffure événement', count:'53 coiffeurs' },
+  { id:'maquillage', icon:'💄', name:'Maquillage artistique', count:'38 artistes' },
+  { id:'deco', icon:'✨', name:'Décoration', count:'41 décorateurs' },
+  { id:'mobilier', icon:'🪑', name:'Location mobilier', count:'22 loueurs' },
+  { id:'salle', icon:'🏛️', name:'Location salle de fêtes', count:'67 salles' },
+];
+
+const CAT_LABELS = {
+  robe:'Robes de fête & mariage', gateau:'Gâteau mariage & anniversaire',
+  dj:'DJ & Animation', photo:'Photographie', fleur:'Fleuriste', traiteur:'Traiteur',
+  coiffure:'Coiffure événement', maquillage:'Maquillage artistique',
+  deco:'Décoration', mobilier:'Location de mobilier', salle:'Location salle de fêtes'
+};
+const CAT_BG = {
+  robe:'#FAF0F5', gateau:'#FFF8F0', dj:'#F0F0FF', photo:'#F0F5FA',
+  fleur:'#F0FAF2', traiteur:'#FFF5F0', coiffure:'#FDF0FA', maquillage:'#FFF0F5',
+  deco:'#FFF9F0', mobilier:'#F5F0E8', salle:'#F0F4FF'
+};
+
+const PROVIDERS = [
+  {id:1,cat:'robe',icon:'👗',name:'Boutique Éléonore',loc:'Lyon, 69000',rating:4.9,reviews:87,badge:'Coup de cœur',tag:'Essayage',price:'Essayage dès 50€',desc:"Spécialiste de la robe sur-mesure depuis 15 ans. Collections exclusives et service personnalisé du lundi au samedi.",tags:['Sur-mesure','Collections exclusives','Retouches incluses','RDV privé'],slots:['10h00','10h30','11h00','11h30','14h00','14h30','15h00','15h30','16h00']},
+  {id:2,cat:'robe',icon:'👗',name:'Maison Blanc Ivoire',loc:'Paris 8e, 75008',rating:4.7,reviews:124,badge:null,tag:'Essayage',price:'Essayage offert',desc:"30 ans de savoir-faire en robe de mariée et de fête. Showroom de 400m² avec plus de 300 modèles.",tags:['Showroom 400m²','300+ modèles','Accessoires','Robes de soirée'],slots:['09h30','10h00','10h30','11h00','14h00','15h00','16h00']},
+  {id:3,cat:'robe',icon:'👗',name:'L\'Atelier des Mariées',loc:'Bordeaux, 33000',rating:4.8,reviews:65,badge:null,tag:'Essayage',price:'Essayage dès 40€',desc:"Créatrices locales et jeunes designers, pour une robe unique et éco-responsable.",tags:['Créateurs locaux','Éco-responsable','Robes bohème','Colorées'],slots:['10h00','11h00','14h00','15h00','16h00']},
+  {id:4,cat:'gateau',icon:'🎂',name:'Pâtisserie Lemaire',loc:'Bordeaux, 33000',rating:4.8,reviews:56,badge:'Top noté',tag:'Dégustation',price:'Dégustation 25€/pers',desc:"Wedding cakes et pièces montées artisanales. Créations uniques selon vos goûts et votre thème.",tags:['Wedding cake','Pièce montée','Sans gluten dispo','Livraison incluse'],slots:['10h00','11h00','14h00','15h00','16h00'],eventType:true},
+  {id:5,cat:'gateau',icon:'🎂',name:"Atelier Sucré d'Emma",loc:'Nantes, 44000',rating:4.6,reviews:43,badge:null,tag:'Dégustation',price:'Dégustation 30€/pers',desc:"Saveurs du monde et créations audacieuses pour mariages, anniversaires et fêtes de toutes sortes.",tags:['Saveurs originales','Gâteaux anniversaire','Cupcakes','Livraison région'],slots:['10h00','11h00','14h00','15h00'],eventType:true},
+  {id:6,cat:'gateau',icon:'🎂',name:'Maison Chou à la Crème',loc:'Paris 11e, 75011',rating:4.9,reviews:98,badge:'Populaire',tag:'Dégustation',price:'Dégustation 35€/pers',desc:"Pâtisserie fine parisienne, spécialisée dans les gâteaux de cérémonie personnalisés.",tags:['Design personnalisé','Végétalien dispo','Paris & IDF','Consultation incluse'],slots:['09h00','10h00','11h00','14h00','15h00'],eventType:true},
+  {id:7,cat:'dj',icon:'🎵',name:'DJ Maxence',loc:'Paris, Île-de-France',rating:5.0,reviews:38,badge:'Exclusif',tag:'DJ mariage',price:'Devis gratuit',desc:"DJ professionnel spécialisé mariages et soirées depuis 10 ans. Sono et éclairage haut de gamme inclus.",tags:['Sono & éclairage','Playlist sur-mesure','MC & animation','Partout en France'],slots:['10h00','11h00','14h00','15h00','16h00']},
+  {id:8,cat:'dj',icon:'🎵',name:'Duo Harmonie Live',loc:'Marseille, 13000',rating:4.7,reviews:29,badge:null,tag:'Groupe live',price:'À partir de 800€',desc:"Jazz, pop, ambiances live sur-mesure pour créer une atmosphère inoubliable.",tags:['Jazz & pop live','Groupe 2-5 musiciens','Cocktail & dîner','Région PACA'],slots:['10h00','14h00','15h00']},
+  {id:9,cat:'photo',icon:'📷',name:"Lumière d'Amour",loc:'Nice, 06000',rating:4.9,reviews:201,badge:'Populaire',tag:'Reportage',price:'Forfaits dès 1 200€',desc:"Photographie de mariage documentaire, style naturel et émotionnel. Album premium inclus.",tags:['Style documentaire','Album premium','Timelapse','Drone disponible'],slots:['09h00','10h00','11h00','14h00','15h00']},
+  {id:10,cat:'photo',icon:'📷',name:'Studio Aurore',loc:'Toulouse, 31000',rating:4.8,reviews:95,badge:null,tag:'Séance engagement',price:'Forfaits dès 900€',desc:"Reportage + séance engagement + album premium. Un duo de photographes pour ne rien manquer.",tags:['Duo de photographes','Séance engagement','Album 30 pages','Retouches illimitées'],slots:['10h00','11h00','14h00','15h00','16h00']},
+  {id:11,cat:'fleur',icon:'💐',name:'Atelier Botanique',loc:'Strasbourg, 67000',rating:4.7,reviews:62,badge:null,tag:'Consultation',price:'Consultation offerte',desc:"Fleurs de saison, compositions sur-mesure et décoration florale complète de votre événement.",tags:['Fleurs de saison','Arche florale','Bouquets & boutonnières','Installation incluse'],slots:['10h00','11h00','14h00','15h00']},
+  {id:12,cat:'traiteur',icon:'🍽️',name:'Saveurs & Cérémonies',loc:'Lille, 59000',rating:4.9,reviews:44,badge:'Premium',tag:'Dégustation',price:'Dégustation 45€/pers',desc:"Cuisine gastronomique pour mariages et grandes réceptions. Service à table inclus.",tags:['Gastronomique','Service à table','Menus personnalisés','Cocktail & dîner'],slots:['11h00','12h00','14h00','15h00']},
+  {id:13,cat:'coiffure',icon:'💇',name:'Atelier Coiff & Chic',loc:'Paris 16e, 75016',rating:4.9,reviews:112,badge:'Coup de cœur',tag:'Essai coiffure',price:'Essai dès 80€',desc:"Coiffeuse événement depuis 12 ans, spécialiste chignons, tresses et coiffures de mariée. Déplacement possible.",tags:['Chignons & tresses','Mariée & témoins','Déplacement possible','Extensions temporaires'],slots:['09h00','09h30','10h00','10h30','11h00','14h00','14h30','15h00']},
+  {id:14,cat:'coiffure',icon:'💇',name:'Charlotte Coiffure Événements',loc:'Lyon, 69001',rating:4.8,reviews:78,badge:null,tag:'Essai coiffure',price:'Essai dès 70€',desc:"Coiffures tendance et classiques pour mariages et soirées. Forfaits groupe disponibles.",tags:['Coiffures tendance','Forfaits groupe','Accessoires fournis','Région Rhône-Alpes'],slots:['09h00','10h00','11h00','14h00','15h00','16h00']},
+  {id:15,cat:'maquillage',icon:'💄',name:'Studio Belle Époque',loc:'Bordeaux, 33000',rating:5.0,reviews:64,badge:'Top noté',tag:'Essai maquillage',price:'Essai à partir de 90€',desc:"Make-up artiste spécialisée événements. Maquillage longue tenue, prise en charge de la mariée et de sa suite.",tags:['Longue tenue','Mariée & suite','Produits haut de gamme','Déplacement inclus'],slots:['09h00','10h00','11h00','14h00','15h00']},
+  {id:16,cat:'maquillage',icon:'💄',name:'Make Up by Inès',loc:'Nice, 06000',rating:4.7,reviews:51,badge:null,tag:'Essai maquillage',price:'Essai à partir de 75€',desc:"Make-up naturel et lumineux pour sublimer votre beauté le jour J. Airbrush disponible.",tags:['Style naturel','Airbrush','Peau mixte & mate','Conseil couleurs'],slots:['09h30','10h30','14h00','15h00','16h00']},
+  {id:17,cat:'deco',icon:'✨',name:'Décors & Merveilles',loc:'Paris & IDF',rating:4.9,reviews:73,badge:'Coup de cœur',tag:'Consultation déco',price:'Consultation offerte',desc:"Décoration complète de votre événement. De la conception à l'installation, nous gérons tout pour vous.",tags:['Conception & installation','Arche florale','Lettres LED','Plan de table'],slots:['10h00','11h00','14h00','15h00','16h00'],decoItems:['Arche florale','Ballons & guirlandes','Centres de table','Photobooth','Chemin de table','Lanternes & bougies','Nappage & vaisselle','Lettres géantes LED','Décoration murale','Toile de fond'],eventType:true},
+  {id:18,cat:'deco',icon:'✨',name:"L'Atelier des Rêves",loc:'Lyon, 69000',rating:4.8,reviews:48,badge:null,tag:'Consultation déco',price:'Devis gratuit',desc:"Spécialiste décoration mariage bohème et champêtre. Locations et créations florales artificielles.",tags:['Style bohème','Champêtre','Fleurs séchées','Location incluse'],slots:['10h00','11h00','14h00','15h00'],decoItems:['Mariage bohème','Thème champêtre','Allée de cérémonie','Arche naturelle','Table d\'honneur','Plan de table','Urne mariage','Fleurs séchées'],eventType:true},
+  {id:19,cat:'deco',icon:'✨',name:'Confetti & Paillettes',loc:'Marseille, 13000',rating:4.7,reviews:36,badge:null,tag:'Consultation déco',price:'À partir de 200€',desc:"Spécialiste anniversaires et fêtes. Décoration colorée, ballons et sweet tables inoubliables.",tags:['Anniversaire enfant','Sweet table','Arche ballon','Personnalisé'],slots:['10h00','14h00','15h00','16h00'],decoItems:['Arche ballon','Sweet table','Toile de fond personnalisée','Kit anniversaire','Confettis & paillettes','Chemin de table'],eventType:true},
+  {id:20,cat:'mobilier',icon:'🪑',name:'Location Prestige Événements',loc:'Paris & IDF',rating:4.8,reviews:39,badge:'Exclusif',tag:'Visite showroom',price:'Devis sur mesure',desc:"Mobilier de prestige pour événements haut de gamme. Livraison, installation et reprise incluses.",tags:['Livraison & installation','Vaisselle incluse','Nappage','Mobilier lounge'],slots:['10h00','11h00','14h00','15h00','16h00'],mobilierItems:['Chaises Chiavari','Tables rondes','Nappes ivoire','Centres de table','Arche florale','Photobooth','Buffet rustique','Chandeliers','Housses de chaise','Mange-debout']},
+  {id:21,cat:'mobilier',icon:'🪑',name:'Rustique & Chic Location',loc:'Nantes, 44000',rating:4.6,reviews:27,badge:null,tag:'Visite showroom',price:'À partir de 15€/article',desc:"Location de mobilier tendance rustique et champêtre. Idéal pour mariages en extérieur.",tags:['Rustique & champêtre','Tables bois','Tentes de réception','Région Pays de la Loire'],slots:['10h00','14h00','15h00'],mobilierItems:['Tables en bois','Bancs rustiques','Guirlandes lumineuses','Panneaux déco','Urnes décoratives','Tentes de réception']},
+  {id:22,cat:'salle',icon:'🏛️',name:'Salle des Fêtes Le Grand Parc',loc:'Versailles, 78000',rating:4.9,reviews:156,badge:'Coup de cœur',tag:'Visite du lieu',price:'À partir de 800€/jour',desc:"Salle de fêtes lumineuse et modulable, avec terrasse et jardin privatifs. Idéale pour mariages et grandes réceptions.",tags:['Terrasse privée','Jardin','Parking gratuit','Sono incluse'],slots:['10h00','14h00','16h00'],salle:{capacite:"jusqu'à 300 invités",superficie:'600 m²',parking:'Parking gratuit 150 places',cuisine:'Cuisine équipée',sono:'Sono & éclairage inclus',exterieur:'Terrasse & jardin'},guests:true},
+  {id:23,cat:'salle',icon:'🏛️',name:'Espace Céleste',loc:'Lyon, 69003',rating:4.8,reviews:89,badge:null,tag:'Visite du lieu',price:'À partir de 600€/jour',desc:"Espace contemporain au cœur de Lyon, avec patio extérieur et équipements professionnels.",tags:['Patio extérieur','Lumière naturelle','Traiteur libre','Centre-ville'],slots:['10h00','11h00','14h00','15h00'],salle:{capacite:"jusqu'à 180 invités",superficie:'400 m²',parking:'Parking public proche',cuisine:'Espace traiteur',sono:'Matériel sono disponible',exterieur:'Patio extérieur'},guests:true},
+  {id:24,cat:'salle',icon:'🏛️',name:'La Grande Orangerie',loc:'Aix-en-Provence, 13100',rating:4.7,reviews:67,badge:'Tendance',tag:'Visite du lieu',price:'À partir de 1 200€/jour',desc:"Orangerie provençale avec parc arboré de 2 hectares. Ambiance naturelle et luxueuse pour votre grand jour.",tags:['Parc 2 ha','DJ booth intégré','Hébergement possible','Vue panoramique'],slots:['11h00','14h00','16h00'],salle:{capacite:"jusqu'à 250 invités",superficie:'700 m²',parking:'Parking privé inclus',cuisine:'Cuisine professionnelle',sono:'DJ booth intégré',exterieur:'Parc arboré 2 ha'},guests:true},
+];
+
+const TESTIMONIALS = [
+  {text:"La plateforme nous a permis de trouver notre photographe et notre DJ en moins d'une heure ! La réservation en ligne est tellement pratique.",author:"Sophie & Thomas",event:"Mariage à Lyon, Juin 2024",stars:5},
+  {text:"J'ai réservé mon essai coiffure et mon essai maquillage le même jour. Tout s'est déroulé parfaitement, les prestataires étaient au top.",author:"Camille M.",event:"Mariée en Septembre 2024",stars:5},
+  {text:"La salle de fêtes que nous avons trouvée sur Vœux & Merveilles était exactement ce qu'on cherchait. Visite organisée en 2 clics !",author:"Julie & Marc",event:"Anniversaire 30 ans à Paris",stars:5},
+];
+
+const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const DAYS = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+
+// ===== COMPONENTS =====
+
+function Nav({ page, setPage, setFilter }) {
+  return (
+    <nav className="nav">
+      <div className="nav-logo" onClick={() => setPage('home')}>
+        Vœux <em>&nbsp;&amp; Merveilles</em>
+      </div>
+      <div className="nav-links">
+        <button className={`nav-link ${page==='home'?'active':''}`} onClick={() => setPage('home')}>Accueil</button>
+        <button className={`nav-link ${page==='providers'?'active':''}`} onClick={() => { setFilter('all'); setPage('providers'); }}>Prestataires</button>
+        <button className={`nav-link ${page==='providers'?'active':''}`} onClick={() => { setFilter('salle'); setPage('providers'); }}>Salles</button>
+        <button className="nav-cta" onClick={() => { setFilter('all'); setPage('providers'); }}>Réserver</button>
+      </div>
+    </nav>
+  );
+}
+
+function Footer({ setPage }) {
+  return (
+    <footer>
+      <div className="footer-inner">
+        <div>
+          <div className="footer-logo">Vœux <em>&amp; Merveilles</em></div>
+          <p className="footer-desc">La marketplace de référence pour trouver et réserver vos prestataires événements. Mariages, anniversaires, fêtes et cérémonies.</p>
+        </div>
+        <div>
+          <div className="footer-col-title">Catégories</div>
+          {['Robes de fête','Gâteaux','DJ & Musique','Photographes'].map(l => (
+            <span key={l} className="footer-link">{l}</span>
+          ))}
+        </div>
+        <div>
+          <div className="footer-col-title">Services</div>
+          {['Coiffure','Maquillage','Décoration','Location mobilier','Salle de fêtes'].map(l => (
+            <span key={l} className="footer-link">{l}</span>
+          ))}
+        </div>
+        <div>
+          <div className="footer-col-title">À propos</div>
+          {['Comment ça marche','Devenir prestataire','Contact','CGU & Confidentialité'].map(l => (
+            <span key={l} className="footer-link">{l}</span>
+          ))}
+        </div>
+      </div>
+      <div className="footer-bottom">
+        © 2025 Vœux &amp; Merveilles · Tous droits réservés · Fait avec ♥ en France
+      </div>
+    </footer>
+  );
+}
+
+function HomePage({ setPage, setFilter, setSelectedProvider }) {
+  const [searchCat, setSearchCat] = useState('');
+  const [searchCity, setSearchCity] = useState('');
+
+  const handleSearch = () => {
+    setFilter(searchCat || 'all');
+    setPage('providers');
+  };
+
+  return (
+    <div className="fade-in">
+      {/* HERO */}
+      <section className="hero">
+        <div className="hero-deco hero-deco-1"></div>
+        <div className="hero-deco hero-deco-2"></div>
+        <div className="hero-eyebrow">Mariages · Fêtes · Cérémonies</div>
+        <h1 className="hero-h1">
+          Trouvez les <em>meilleurs</em><br/>prestataires pour votre<br/>événement
+        </h1>
+        <p className="hero-p">
+          Robes, gâteaux, DJ, photographe, coiffure, maquillage, décoration, mobilier, salle de fêtes… Réservez votre créneau en quelques clics.
+        </p>
+        <div className="hero-search">
+          <select value={searchCat} onChange={e => setSearchCat(e.target.value)}>
+            <option value="">Toutes catégories</option>
+            {CATEGORIES.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+          <input
+            type="text" placeholder="Ville ou code postal…"
+            value={searchCity} onChange={e => setSearchCity(e.target.value)}
+            onKeyDown={e => e.key==='Enter' && handleSearch()}
+          />
+          <button onClick={handleSearch}>Rechercher</button>
+        </div>
+        <div className="hero-stats">
+          <div><div className="hero-stat-num">480+</div><div className="hero-stat-lbl">Prestataires vérifiés</div></div>
+          <div><div className="hero-stat-num">12 000+</div><div className="hero-stat-lbl">Réservations réalisées</div></div>
+          <div><div className="hero-stat-num">4.9★</div><div className="hero-stat-lbl">Note moyenne</div></div>
+        </div>
+      </section>
+
+      {/* CATÉGORIES */}
+      <section className="section">
+        <div className="section-header">
+          <div className="section-eyebrow">Explorez</div>
+          <h2 className="section-title">Toutes les catégories</h2>
+          <p className="section-sub">Tout ce dont vous avez besoin pour votre grand jour</p>
+        </div>
+        <div className="cat-grid">
+          {CATEGORIES.map(cat => (
+            <div key={cat.id} className="cat-card" onClick={() => { setFilter(cat.id); setPage('providers'); }}>
+              <span className="cat-icon">{cat.icon}</span>
+              <div className="cat-name">{cat.name}</div>
+              <div className="cat-count">{cat.count}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TOP PRESTATAIRES */}
+      <section className="section section-alt">
+        <div className="section-header">
+          <div className="section-eyebrow">Sélection</div>
+          <h2 className="section-title">Prestataires coup de cœur</h2>
+          <p className="section-sub">Les plus plébiscités par nos mariés</p>
+        </div>
+        <div className="providers-grid" style={{padding:0,maxWidth:'1100px',margin:'0 auto'}}>
+          {PROVIDERS.filter(p => p.badge === 'Coup de cœur').map(p => (
+            <ProviderCard key={p.id} provider={p} setPage={setPage} setSelectedProvider={setSelectedProvider} />
+          ))}
+        </div>
+      </section>
+
+      {/* COMMENT ÇA MARCHE */}
+      <section className="section">
+        <div className="section-header">
+          <div className="section-eyebrow">Simple & rapide</div>
+          <h2 className="section-title">Comment ça marche</h2>
+          <p className="section-sub">De la recherche à la réservation en moins de 5 minutes</p>
+        </div>
+        <div className="how-grid">
+          {[
+            {n:'1', title:'Recherchez', desc:'Filtrez par catégorie, localisation et disponibilité pour trouver le prestataire idéal.'},
+            {n:'2', title:'Consultez', desc:'Parcourez les fiches détaillées, avis clients et tarifs de chaque prestataire.'},
+            {n:'3', title:'Réservez', desc:'Choisissez votre créneau en ligne et confirmez votre réservation en quelques clics.'},
+            {n:'4', title:'Profitez', desc:'Vivez votre événement l\'esprit tranquille, nous gérons les confirmations et rappels.'},
+          ].map(s => (
+            <div key={s.n}>
+              <div className="how-num">{s.n}</div>
+              <div className="how-title">{s.title}</div>
+              <p className="how-desc">{s.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TÉMOIGNAGES */}
+      <section className="section section-alt">
+        <div className="section-header">
+          <div className="section-eyebrow">Ils nous font confiance</div>
+          <h2 className="section-title">Avis de nos clients</h2>
+        </div>
+        <div className="testi-grid">
+          {TESTIMONIALS.map((t, i) => (
+            <div key={i} className="testi-card">
+              <div className="testi-stars">{'★'.repeat(t.stars)}</div>
+              <p className="testi-text">"{t.text}"</p>
+              <div className="testi-author">{t.author}</div>
+              <div className="testi-event">{t.event}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function ProviderCard({ provider: p, setPage, setSelectedProvider }) {
+  return (
+    <div className="provider-card" onClick={() => { setSelectedProvider(p); setPage('detail'); }}>
+      <div className="provider-img" style={{background: CAT_BG[p.cat]}}>
+        <span style={{fontSize:'42px'}}>{p.icon}</span>
+        {p.badge && <span className="provider-badge">{p.badge}</span>}
+      </div>
+      <div className="provider-body">
+        <div className="provider-cat">{CAT_LABELS[p.cat]}</div>
+        <div className="provider-name">{p.name}</div>
+        <div className="provider-loc">📍 {p.loc}</div>
+        <div className="provider-rating">
+          <span className="stars">{'★'.repeat(Math.floor(p.rating))}</span>
+          <span className="rating-num">{p.rating} ({p.reviews} avis)</span>
+        </div>
+        <div className="provider-price">{p.price}</div>
+      </div>
+      <div className="provider-footer">
+        <span className="tag">{p.tag}</span>
+        <button className="book-btn" onClick={e => { e.stopPropagation(); setSelectedProvider(p); setPage('booking'); }}>
+          Réserver
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function ProvidersPage({ filter, setFilter, setPage, setSelectedProvider }) {
+  const list = filter === 'all' ? PROVIDERS : PROVIDERS.filter(p => p.cat === filter);
+  return (
+    <div className="fade-in">
+      <div className="providers-header">
+        <h1 className="providers-title">
+          {filter === 'all' ? 'Tous les prestataires' : CAT_LABELS[filter]}
+        </h1>
+        <div className="filters">
+          <button className={`filter-btn ${filter==='all'?'active':''}`} onClick={() => setFilter('all')}>Tous</button>
+          {CATEGORIES.map(c => (
+            <button key={c.id} className={`filter-btn ${filter===c.id?'active':''}`} onClick={() => setFilter(c.id)}>
+              {c.icon} {c.name.split(' ')[0]}
+            </button>
+          ))}
+        </div>
+      </div>
+      {list.length === 0 ? (
+        <div className="empty-state">
+          <span className="empty-state-icon">🔍</span>
+          <div className="empty-state-title">Aucun prestataire trouvé</div>
+        </div>
+      ) : (
+        <div className="providers-grid">
+          {list.map(p => <ProviderCard key={p.id} provider={p} setPage={setPage} setSelectedProvider={setSelectedProvider} />)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DetailPage({ provider: p, setPage, setSelectedProvider }) {
+  if (!p) return null;
+  return (
+    <div className="fade-in">
+      <div className="breadcrumb">
+        <span onClick={() => setPage('home')}>Accueil</span>
+        <span className="sep">›</span>
+        <span onClick={() => setPage('providers')}>Prestataires</span>
+        <span className="sep">›</span>
+        <span style={{color:'var(--text-dark)'}}>{p.name}</span>
+      </div>
+      <button className="detail-back" onClick={() => setPage('providers')}>← Retour aux résultats</button>
+      <div className="detail-hero">
+        <div>
+          <div className="detail-img" style={{background: CAT_BG[p.cat]}}>
+            <span style={{fontSize:'80px'}}>{p.icon}</span>
+            {p.badge && <span className="detail-badge">{p.badge}</span>}
+          </div>
+        </div>
+        <div>
+          <div className="detail-cat">{CAT_LABELS[p.cat]}</div>
+          <h1 className="detail-name">{p.name}</h1>
+          <div className="detail-loc">📍 {p.loc}</div>
+          <div className="detail-rating">
+            <span className="stars" style={{fontSize:'18px'}}>{'★'.repeat(Math.floor(p.rating))}</span>
+            <span className="detail-rating-num">{p.rating} · {p.reviews} avis vérifiés</span>
+          </div>
+          <p className="detail-desc">{p.desc}</p>
+          <div className="detail-price-box">
+            <div className="detail-price-label">Tarif</div>
+            <div className="detail-price-val">{p.price}</div>
+          </div>
+          {p.tags && (
+            <div className="detail-tags">
+              {p.tags.map(t => <span key={t} className="detail-tag">{t}</span>)}
+            </div>
+          )}
+          <button className="detail-book-btn" onClick={() => setPage('booking')}>
+            Réserver un créneau →
+          </button>
+        </div>
+      </div>
+
+      {p.salle && (
+        <div className="detail-extra">
+          <div className="detail-extra-title">Informations de la salle</div>
+          <div className="detail-extra-grid">
+            {Object.entries({Capacité:p.salle.capacite,Superficie:p.salle.superficie,Parking:p.salle.parking,Restauration:p.salle.cuisine,Sono:p.salle.sono,'Espaces ext.':p.salle.exterieur}).map(([k,v]) => (
+              <div key={k} className="detail-extra-row"><span>{k} : </span><span>{v}</span></div>
+            ))}
+          </div>
+        </div>
+      )}
+      {(p.mobilierItems || p.decoItems) && (
+        <div className="detail-extra">
+          <div className="detail-extra-title">{p.mobilierItems ? 'Éléments disponibles' : 'Prestations & thèmes'}</div>
+          <div className="detail-items">
+            {(p.mobilierItems || p.decoItems).map(item => <span key={item} className="detail-item-tag">{item}</span>)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Calendar({ selectedDate, onSelect }) {
+  const [year, setYear] = useState(2025);
+  const [month, setMonth] = useState(5);
+
+  const changeMonth = dir => {
+    let m = month + dir, y = year;
+    if (m < 0) { m = 11; y--; }
+    if (m > 11) { m = 0; y++; }
+    setMonth(m); setYear(y);
+  };
+
+  const today = new Date();
+  const firstDay = new Date(year, month, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  return (
+    <div className="calendar">
+      <div className="cal-header">
+        <button className="cal-nav" onClick={() => changeMonth(-1)}>‹</button>
+        <span className="cal-month">{MONTHS[month]} {year}</span>
+        <button className="cal-nav" onClick={() => changeMonth(1)}>›</button>
+      </div>
+      <div className="cal-days">
+        {DAYS.map(d => <div key={d} className="cal-day-label">{d}</div>)}
+        {Array.from({length: offset}).map((_, i) => <div key={`e${i}`} className="cal-day empty"></div>)}
+        {Array.from({length: daysInMonth}).map((_, i) => {
+          const d = i + 1;
+          const thisDate = new Date(year, month, d);
+          const past = thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+          const isSel = selectedDate && selectedDate.d === d && selectedDate.m === month && selectedDate.y === year;
+          const isToday = d === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+          let cls = 'cal-day';
+          if (past) cls += ' disabled';
+          else if (isSel) cls += ' selected';
+          else if (isToday) cls += ' today';
+          return (
+            <div key={d} className={cls} onClick={() => !past && onSelect({d, m:month, y:year})}>
+              {d}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function BookingPage({ provider: p, setPage }) {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [tel, setTel] = useState('');
+  const [wedding, setWedding] = useState('');
+  const [guests, setGuests] = useState('');
+  const [eventType, setEventType] = useState('Mariage');
+  const [msg, setMsg] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
+
+  if (!p) return null;
+
+  const slots = p.slots || ['09h00','10h00','11h00','14h00','15h00','16h00'];
+  const takenIdxs = slots.length > 3 ? [1, 3] : [];
+  const taken = takenIdxs.map(i => slots[i]);
+
+  const slotLabel = p.salle ? 'créneau de visite' : p.mobilierItems ? 'créneau showroom' : p.decoItems ? 'créneau consultation' : 'créneau';
+
+  const handleConfirm = () => {
+    if (!selectedDate || !selectedSlot) { alert('Veuillez choisir une date et un créneau.'); return; }
+    setConfirmed(true);
+  };
+
+  if (confirmed) {
+    return (
+      <div className="fade-in">
+        <div className="confirm-page">
+          <div className="confirm-circle">🎉</div>
+          <h2 className="confirm-h2">Réservation confirmée !</h2>
+          <p className="confirm-p">
+            Un email de confirmation a été envoyé à <strong>{email || 'votre adresse'}</strong>.<br/>
+            Le prestataire vous contactera sous 24h pour finaliser les détails.
+          </p>
+          <div className="confirm-card">
+            <div className="confirm-card-title">Récapitulatif</div>
+            {[
+              ['Prestataire', p.name],
+              ['Catégorie', CAT_LABELS[p.cat]],
+              ['Date', selectedDate ? `${selectedDate.d} ${MONTHS[selectedDate.m]} ${selectedDate.y}` : '-'],
+              ['Créneau', selectedSlot],
+              ['Client', name || 'Non renseigné'],
+              ['Tarif', p.price],
+            ].map(([k, v]) => (
+              <div key={k} className="confirm-row">
+                <span className="ck">{k}</span>
+                <span className="cv">{v}</span>
+              </div>
+            ))}
+          </div>
+          <div className="confirm-actions">
+            <button className="confirm-btn" onClick={() => setPage('home')}>Retour à l'accueil</button>
+            <button className="btn-outline" onClick={() => { setPage('providers'); }}>Voir d'autres prestataires</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fade-in">
+      <div className="booking-wrap">
+        <button className="booking-back" onClick={() => setPage('detail')}>← Retour à la fiche</button>
+
+        <div className="booking-header">
+          <div className="booking-icon">{p.icon}</div>
+          <div>
+            <div className="booking-meta-cat">{CAT_LABELS[p.cat]}</div>
+            <div className="booking-meta-name">{p.name}</div>
+            <div className="booking-meta-loc">📍 {p.loc}</div>
+            <div className="booking-meta-price">{p.price}</div>
+          </div>
+        </div>
+
+        {p.salle && (
+          <div className="info-box" style={{marginBottom:'1.5rem'}}>
+            <div className="info-box-title">Informations de la salle</div>
+            <div className="info-grid">
+              {Object.entries({Capacité:p.salle.capacite,Superficie:p.salle.superficie,Parking:p.salle.parking,Cuisine:p.salle.cuisine,Sono:p.salle.sono,Extérieur:p.salle.exterieur}).map(([k,v]) => (
+                <div key={k} className="info-row"><span className="ik">{k} : </span><span className="iv">{v}</span></div>
+              ))}
+            </div>
+          </div>
+        )}
+        {p.mobilierItems && (
+          <div className="info-box" style={{marginBottom:'1.5rem'}}>
+            <div className="info-box-title">Éléments disponibles à la location</div>
+            <div className="item-tags">{p.mobilierItems.map(i => <span key={i} className="item-tag">{i}</span>)}</div>
+          </div>
+        )}
+        {p.decoItems && (
+          <div className="info-box" style={{marginBottom:'1.5rem'}}>
+            <div className="info-box-title">Prestations & thèmes proposés</div>
+            <div className="item-tags">{p.decoItems.map(i => <span key={i} className="item-tag">{i}</span>)}</div>
+          </div>
+        )}
+
+        <div className="booking-grid">
+          <div>
+            <div className="booking-section-title">Choisissez une date</div>
+            <Calendar selectedDate={selectedDate} onSelect={d => { setSelectedDate(d); setSelectedSlot(null); }} />
+
+            <div style={{marginTop:'1.5rem'}}>
+              <div className="booking-section-title">Choisissez un {slotLabel}</div>
+              <div className="slots-grid">
+                {slots.map(s => (
+                  <div
+                    key={s}
+                    className={`slot ${taken.includes(s)?'taken':''} ${selectedSlot===s?'selected':''}`}
+                    onClick={() => !taken.includes(s) && setSelectedSlot(s)}
+                  >{s}</div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div className="booking-section-title">Vos informations</div>
+            <div className="form-card">
+              <div className="form-group">
+                <label className="form-label">Prénom & Nom</label>
+                <input className="form-input" type="text" placeholder="Sophie Martin" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input className="form-input" type="email" placeholder="sophie@example.com" value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Téléphone</label>
+                <input className="form-input" type="tel" placeholder="06 12 34 56 78" value={tel} onChange={e => setTel(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Date de l'événement</label>
+                <input className="form-input" type="date" value={wedding} onChange={e => setWedding(e.target.value)} />
+              </div>
+              {p.guests && (
+                <div className="form-group">
+                  <label className="form-label">Nombre d'invités</label>
+                  <input className="form-input" type="number" placeholder="80" min="1" value={guests} onChange={e => setGuests(e.target.value)} />
+                </div>
+              )}
+              {p.eventType && (
+                <div className="form-group">
+                  <label className="form-label">Type d'événement</label>
+                  <select className="form-select" value={eventType} onChange={e => setEventType(e.target.value)}>
+                    <option>Mariage</option>
+                    <option>Anniversaire</option>
+                    <option>Soirée de fête</option>
+                    <option>Baptême</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
+              )}
+              <div className="form-group">
+                <label className="form-label">Message (optionnel)</label>
+                <textarea className="form-textarea" placeholder="Vos préférences, questions…" value={msg} onChange={e => setMsg(e.target.value)} />
+              </div>
+            </div>
+
+            {selectedDate && selectedSlot && (
+              <div className="summary-box">
+                <div className="summary-title">Récapitulatif</div>
+                <div className="summary-row"><span className="lbl">Prestataire</span><span>{p.name}</span></div>
+                <div className="summary-row"><span className="lbl">Date</span><span>{selectedDate.d} {MONTHS[selectedDate.m]} {selectedDate.y}</span></div>
+                <div className="summary-row"><span className="lbl">Créneau</span><span>{selectedSlot}</span></div>
+                <div className="summary-row"><span className="lbl">Catégorie</span><span>{CAT_LABELS[p.cat]}</span></div>
+                <hr className="summary-divider" />
+                <div className="summary-total"><span>Tarif</span><span>{p.price}</span></div>
+              </div>
+            )}
+            <button className="confirm-btn" onClick={handleConfirm}>Confirmer la réservation →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== APP =====
+function App() {
+  const [page, setPage] = useState('home');
+  const [filter, setFilter] = useState('all');
+  const [selectedProvider, setSelectedProvider] = useState(null);
+
+  const handleSetPage = useCallback((p) => {
+    setPage(p);
+    window.scrollTo(0, 0);
+  }, []);
+
+  const handleSetFilter = useCallback((f) => setFilter(f), []);
+
+  const handleSetProvider = useCallback((p) => setSelectedProvider(p), []);
+
+  return (
+    <div>
+      <Nav page={page} setPage={handleSetPage} setFilter={handleSetFilter} />
+      {page === 'home' && (
+        <HomePage setPage={handleSetPage} setFilter={handleSetFilter} setSelectedProvider={handleSetProvider} />
+      )}
+      {page === 'providers' && (
+        <ProvidersPage filter={filter} setFilter={handleSetFilter} setPage={handleSetPage} setSelectedProvider={handleSetProvider} />
+      )}
+      {page === 'detail' && (
+        <DetailPage provider={selectedProvider} setPage={handleSetPage} setSelectedProvider={handleSetProvider} />
+      )}
+      {page === 'booking' && (
+        <BookingPage provider={selectedProvider} setPage={handleSetPage} />
+      )}
+      <Footer setPage={handleSetPage} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
